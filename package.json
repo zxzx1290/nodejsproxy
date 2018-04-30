@@ -1,0 +1,19 @@
+{
+  "name": "nodejsproxy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodejs app.js"
+  },
+  "author": "",
+  "dependencies": {
+    "cookie": "^0.3.1",
+    "http-proxy": "^1.15.1",
+    "querystring": "^0.2.0",
+    "redis": "^2.8.0",
+    "request": "^2.83.0",
+    "speakeasy": "^2.0.0"
+  },
+  "devDependencies": {}
+}

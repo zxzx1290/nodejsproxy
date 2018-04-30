@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - <?= host ?></title>
+    <meta name="description" content="Testused Login System">
+    <meta name="copyright" content="Copyright© Testused" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+</head>
+<body>
+
+<style type="text/css">
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+html{
+    height:100%;
+    width:100%;
+    margin:0;
+}
+body{
+    height:100%;
+    width:100%;
+    margin:0;
+    font-family: Roboto-Light,"Microsoft JhengHei",Arial,Helvetica,sans-serif;
+    font-size:16px;
+    color:#595f69;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.intro-wrapper {
+    text-align: left;
+    word-wrap: break-word;
+    box-shadow: 0 15px 30px 0 rgba(0,0,1,.1);
+    background-color:#fff;
+    border-radius:6px;
+
+    width: 18rem;
+    height: 23rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.p30{
+    width:30%;
+    display:inline-block;
+    font-weight: 700
+}
+.p70{
+    width:70%;
+    display:inline-block;
+}
+.text-center{
+    text-align: center;
+}
+img{
+    display: block;
+    margin: 0 auto;
+    width: 8rem;
+    height: 8rem;
+    padding: 1.5rem;
+}
+input {
+    display: block;
+    font-size: 14px;
+    width: 14rem;
+    margin: 1rem auto;
+    padding: 0.6rem 0.5rem 0.6rem 0.5rem;
+    border-radius: 5px;
+    border: 1px solid #666;
+    opacity: 0.6;
+}
+input:focus {
+    opacity: 0.9;
+    color:#08c;
+    border: 1px solid #08c;
+}
+input[type="text"]:focus,
+input[type="password"]:focus {
+    border: 1px solid #08c;
+    outline: none;
+}
+input[type="submit"] {
+    opacity: 1;
+    width: 10rem;
+    border-radius: 4px;
+    border:1px solid #3890ff;
+    color: #eee;
+    cursor: pointer;
+    background-color:#3890ff;
+    background-image:linear-gradient(0deg,hsla(0,0%,100%,.06) 0,hsla(0,0%,100%,.06)),linear-gradient(0deg,rgba(9,109,236,.5) 0,rgba(76,155,255,.5));
+}
+input[type="submit"]:hover {
+    transition: all 0.40s ease-out;
+    background-image:linear-gradient(0deg,rgba(9,109,236,.5) 0,rgba(76,155,255,.5));
+}
+input[name="rememberme"] {
+    display: inline-block;
+    width: auto;
+}
+
+input.fashion[type="checkbox"]{
+    display: none;
+}
+label.fashion {
+    display: inline-block;
+    position: relative;
+}
+input.fashion[type="checkbox"] + label.fashion {
+    padding-left: 32px;
+}
+input.fashion[type="checkbox"] + label.fashion:before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    left: 0;
+    border: 2px solid #666;
+    background: rgba(255,255,255,0.5);
+}
+input.fashion[type="checkbox"]:checked + label.fashion:after {
+    content: '';
+    display: block;
+    width: 10px;
+    height: 5px;
+    border-bottom: 2px solid #000;
+    border-left: 2px solid #000;
+    transform: rotate(-45deg);
+    position: absolute;
+    top: 6px;
+    left: 5px;
+}
+
+input.fashion[type="checkbox"]:checked + label.fashion:before,
+input.fashion[type="checkbox"] + label.fashion:hover:before {
+    border: 2px solid #000;
+}
+
+form > input:first-child {
+    margin-top: 0;
+}
+
+.row{
+    width: 14rem;
+}
+#main-block{
+    height: 14rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.spinner {
+    z-index:9999;
+    border-radius: 100%;
+    border-style: solid;
+    border-width: 0.2rem;
+    height: 3rem;
+    width: 3rem;
+    animation: basicloader 0.6s infinite linear;
+    border-color: rgba(0, 0, 0, 0.2);
+    border-top-color: #2BB673;
+
+    display: none;
+}
+@keyframes  basicloader {
+    0%   { transform: rotate(0); }
+    100% { transform: rotate(359.9deg); }
+}
+#errorcount{
+    right: 1rem;
+    top: 1rem;
+    height: 1.8rem;
+    width: 1.8rem;
+    position: absolute;
+    color: #fff;
+    background: #ff0000;
+    border-radius:50%;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.6);
+}
+</style>
+
+
+<div class="intro-wrapper">
+    <a href="https://testused.com" style="position:relative">
+        <span id="errorcount"><?= count ?></span>
+        <img src="https://testused.com/static/favicon.png">
+    </a>
+    <!--<div class="row"><span class="p30">site</span><span class="p70"><?= host ?></span></div>-->
+    <!--<div class="row"><span class="p30">ip</span><span class="p70"><?= ip ?></span></div>-->
+    <!--<div class="row"><span class="p30">path</span><span class="p70"><?= pathname ?></span></div>-->
+    <div class="row" id="main-block">
+        <form method="post" action="<?= loginurl ?>">
+            <input type="text" name="username" placeholder="帳號">
+            <input type="password" name="password" placeholder="密碼">
+            <div>
+                <input class="fashion" type="checkbox" value="✓" name="rememberme" id="rememberme">
+                <label class="fashion" for="rememberme">記住我</label>
+            </div>
+            <input type="submit" value="登入">
+        </form>
+        <div class="spinner"></div>
+    </div>
+</div>
+
+
+<script>
+"use strict";
+// window.test = 1 => 測試模式
+(function(){
+    var background = ['linear-gradient(-35deg, #289DCC 3%, #815EFF 94%)',
+                        'linear-gradient(-35deg, #36AC91 3%, #5AD0FF 94%)',
+                        'linear-gradient(180deg, #26a86b, #7e85fb)',
+                        'linear-gradient(#8b9da9, #f7dfaf)',
+                        'linear-gradient(60deg, rgba(255, 165, 150, 0.5) 5%, rgba(0, 228, 255, 0.35))'];
+    document.body.style.background = background[Math.floor(Math.random()*background.length)];
+
+    document.getElementsByName("username")[0].focus();
+
+    if (parseInt(document.getElementById("errorcount").innerHTML,10) > 0) {
+        document.getElementById("errorcount").style.display = 'flex';
+    }
+
+    document.querySelector('form').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        if (window.test !== undefined){
+            document.querySelector('form').style.display = 'none';
+            document.querySelector('.spinner').style.display = 'block';
+            setTimeout(function(){
+                document.querySelector('.spinner').style.display = 'none';
+                document.querySelector('form').style.display = 'block';
+            },3000);
+            return;
+        }
+
+        Ajaxsend.post("<?= loginurl ?>", {'username': document.getElementsByName('username')[0].value, 'password': document.getElementsByName('password')[0].value, 'rememberme': (document.getElementsByName('rememberme')[0].checked) ? 'true' : 'false'})
+        .before(function() {
+            document.querySelector('form').style.display = 'none';
+            document.querySelector('.spinner').style.display = 'block';
+        })
+        .send()
+        .success(function(info) {
+            try {
+                var data = JSON.parse(info);
+            } catch(e) {
+                var data = {"code":"99"};
+            }
+            switch (data['code']) {
+                case '1':
+                    window.location.href = data['data'];
+                    break;
+                case '2':
+                case '3':
+                    document.getElementById("errorcount").innerHTML = data['data'];
+                    document.getElementById("errorcount").style.display = 'flex';
+                    break;
+                default:
+                    alert('系統錯誤，請重試');
+                    console.log(data);
+            }
+            if (data['code'] !== "1") {
+                document.querySelector('.spinner').style.display = 'none';
+                document.querySelector('form').style.display = 'block';
+            }
+        })
+        .error(function(e) {
+            alert('系統錯誤，請重試');
+            console.log(e);
+        });
+    });
+})();
+</script>
+<script type="text/javascript" src="https://testused.com/static/ajaxsend.js"></script>
+</body>
+</html>
