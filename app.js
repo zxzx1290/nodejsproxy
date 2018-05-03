@@ -8,7 +8,7 @@ const url = require("url");
 const cookie = require("cookie");
 const redis = require("redis");
 const qs = require("querystring");
-//const request = require("request");
+const request = require("request");
 const speakeasy = require("speakeasy");
 const crypto = require("crypto");
 
@@ -285,10 +285,10 @@ const proxyServer = http.createServer(function(req, res) {
                                 let rediskey = sha512(id + req.headers.host + config.secret);
 
                                 // line bot
-                                /*request({
+                                request({
                                     method: "GET",
                                     url: config.loginNotify + encodeURIComponent(post.username + " 於 " + req.headers["x-real-ip"] + " 登入 " + req.headers.host + "\r\nsession " + rediskey.substring(0,5))
-                                }, function(error, response, body) {});*/
+                                }, function(error, response, body) {});
 
                                 // del ban record
                                 client.del(md5(ip), function(err, reply) {
