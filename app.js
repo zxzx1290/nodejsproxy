@@ -100,6 +100,7 @@ function passproxy(domain, reply, req, res, socket, head) {
     }
 
     if (typeof tunnelobj[t] === 'undefined') {
+        console.log('unknown tunnel');
         return 'unknown tunnel';
     }
     if (typeof socket === 'undefined') {
@@ -197,10 +198,12 @@ const proxyServer = http.createServer(function(req, res) {
         if (reply !== null && parseInt(reply, 10) >= config.maxretry) {
             res.write('banned ip ' + ip);
             res.end();
+            console.log('banned ip ' + ip);
         } else {
             if (err !== null) {
                 res.write('auth unavailable');
                 res.end();
+                console.log('auth unavailable'+err);
                 return;
             }
             // not ban
@@ -280,6 +283,7 @@ const proxyServer = http.createServer(function(req, res) {
                                     });
                                     res.write('generate ID fail');
                                     res.end();
+                                    console.log('generate ID fail');
                                     return;
                                 }
                                 let rediskey = sha512(id + req.headers.host + config.secret);
@@ -359,6 +363,7 @@ proxyServer.on('upgrade', function(req, socket, head) {
                 'Access Denied: You are banned\r\n' +
                 '\r\n');
             socket.end();
+            console.log('You are banned');
         } else if (typeof cookies['proxysession'] !== 'undefined') {
             // check session
             let key = sha512(cookies['proxysession'] + req.headers.host + config.secret);
@@ -370,6 +375,7 @@ proxyServer.on('upgrade', function(req, socket, head) {
                         'Access Denied: You are banned\r\n' +
                         '\r\n');
                     socket.end();
+                    console.log('You are banned');
                 } else {
                     // auth ok
                     // borken on socket interrupt, catch no work
@@ -386,6 +392,7 @@ proxyServer.on('upgrade', function(req, socket, head) {
                 'Access Denied: You are not allow\r\n' +
                 '\r\n');
             socket.end();
+            console.log('You are not allow');
         }
     });
 });

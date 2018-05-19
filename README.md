@@ -8,3 +8,5 @@ a simple http proxy with two-factor authentication and domain based login system
 * run npm update
 * modify the sample.config.js and template.html
 * run `node app.js`
+
+If you find any bug please let me known, thanks.

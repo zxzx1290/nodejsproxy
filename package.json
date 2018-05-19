@@ -9,7 +9,7 @@
   "author": "",
   "dependencies": {
     "cookie": "^0.3.1",
-    "http-proxy": "^1.15.1",
+    "http-proxy": "^1.17.0",
     "querystring": "^0.2.0",
     "redis": "^2.8.0",
     "request": "^2.83.0",
