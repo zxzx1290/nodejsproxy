@@ -14,7 +14,7 @@
 @font-face {
     font-family: LibreFranklin-Light;
     src: local(LibreFranklin-Light),
-    url("{{ urlprefix }}/static/fonts/LibreFranklin-Light.ttf");
+    url("https://testused.com/static/fonts/LibreFranklin-Light.ttf");
 }
 *, ::after, ::before {
     box-sizing: border-box;
@@ -259,7 +259,7 @@ input.fashion[type="checkbox"] + label.fashion:hover:before {
             return;
         }
 
-        Ajaxsend.post("<?= loginurl ?>", {'username': document.getElementsByName('username')[0].value, 'password': document.getElementsByName('password')[0].value, 'rememberme': (document.getElementsByName('rememberme')[0].checked) ? 'true' : 'false'})
+        ajaxsend.post("<?= loginurl ?>", {'username': document.getElementsByName('username')[0].value, 'password': document.getElementsByName('password')[0].value, 'rememberme': (document.getElementsByName('rememberme')[0].checked) ? 'true' : 'false'})
         .before(function() {
             document.querySelector('form').style.display = 'none';
             document.querySelector('.spinner').style.display = 'block';
