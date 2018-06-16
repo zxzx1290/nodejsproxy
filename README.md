@@ -1,4 +1,4 @@
-# nodejsproxy
+# nodejsproxy [![Build Status](https://travis-ci.org/zxzx1290/nodejsproxy.svg?branch=master)](https://travis-ci.org/zxzx1290/nodejsproxy)
 
 a simple http proxy with two-factor authentication and domain based login system
 
