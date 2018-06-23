@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "nodejs app.js"
+    "start": "NODE_ENV=prod node app.js",
+    "test": "NODE_ENV=test node_modules/.bin/mocha"
   },
   "author": "",
   "dependencies": {
@@ -15,5 +16,8 @@
     "request": "^2.83.0",
     "speakeasy": "^2.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "expect.js": "^0.3.1",
+    "mocha": "^5.2.0"
+  }
 }
