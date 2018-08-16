@@ -177,7 +177,7 @@ input.fashion[type="checkbox"] + label.fashion:hover:before {
     position:relative;
     padding-top: 1rem;
 }
-.logo span{
+.logo div{
     right: -0.5rem;
     top: -0.5rem;
     height: 1.8rem;
@@ -187,9 +187,11 @@ input.fashion[type="checkbox"] + label.fashion:hover:before {
     background: #ff42c9;
     border-radius:50%;
     display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+
+    text-align: center;
+    vertical-align: middle;
+    line-height: 1.8rem;
+
     box-shadow: 0 3px 10px rgba(0,0,0,0.3);
 }
 .noselect {
@@ -206,7 +208,7 @@ input.fashion[type="checkbox"] + label.fashion:hover:before {
 
 <div class="intro-wrapper">
     <a href="https://testused.com" class="logo">
-        <span><?= count ?></span>
+        <div><?= count ?></div>
         <img src="https://testused.com/static/favicon-big.svg">
     </a>
     <!--<div class="row"><span class="p30">site</span><span class="p70"><?= host ?></span></div>-->
@@ -242,8 +244,8 @@ input.fashion[type="checkbox"] + label.fashion:hover:before {
 
     document.getElementsByName("username")[0].focus();
 
-    if (parseInt(document.querySelector(".logo span").innerHTML,10) > 0) {
-        document.querySelector(".logo span").style.display = 'flex';
+    if (parseInt(document.querySelector(".logo div").innerHTML,10) > 0) {
+        document.querySelector(".logo div").style.display = 'block';
     }
 
     document.querySelector('form').addEventListener('submit', function(event) {
@@ -277,8 +279,8 @@ input.fashion[type="checkbox"] + label.fashion:hover:before {
                     break;
                 case '2':
                 case '3':
-                    document.querySelector(".logo span").innerHTML = data['data'];
-                    document.querySelector(".logo span").style.display = 'flex';
+                    document.querySelector(".logo div").innerHTML = data['data'];
+                    document.querySelector(".logo div").style.display = 'block';
                     break;
                 default:
                     alert('系統錯誤，請重試');

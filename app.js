@@ -161,10 +161,13 @@ const proxyServer = http.createServer(function(req, res) {
                                     // redis use seconds
                                     client.set(rediskey, Buffer.from(post.username).toString('base64'), 'EX', loginAliveSec, function(err, reply) {
                                         // console.log('user '+post.username+' login success');
-                                        res.writeHead(200, {
-                                            'Content-Type': 'text/html',
-                                            'Set-Cookie': 'proxysession=' + id + ';path=/;Expires=' + cookieAliveSec + ';httpOnly;Secure'
-                                        });
+                                        res.setHeader('Content-Type', 'text/html');
+                                        res.setHeader('Set-Cookie',
+                                        [
+                                            'proxysession=' + id + ';path=/;Expires=' + cookieAliveSec + ';httpOnly;Secure',
+                                            'proxyuser=' + post.username + ';path=/;Expires=' + cookieAliveSec + ';httpOnly;Secure',
+                                            'proxyhash=' + util.md5(post.username + config.usersalt) + ';path=/;Expires=' + cookieAliveSec + ';httpOnly;Secure',
+                                        ]);
                                         res.write(JSON.stringify({'code':'1','data':util.getPrefixURL(config, req.headers.host, 'exroot')}));
                                         res.end();
                                     });

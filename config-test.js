@@ -5,6 +5,7 @@ module.exports = {
     template: "template.html",
     loginNotify: null,
     secret: "test-secret",
+    usersalt: "test-salt",
     maxretry: 3,
     redisPassword: null,
     defaultLoginAliveSec: 86400, // 1 day
