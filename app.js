@@ -232,11 +232,18 @@ proxyServer.on('upgrade', function(req, socket, head) {
                     console.log('You are banned');
                 } else {
                     // auth ok
-                    // borken on socket interrupt, catch no work
-                    tunnel.passProxy(req.headers.host, reply, req, null, socket, head);
                     socket.id = Math.random().toString(16).substring(2);
-                    // store websocket
-                    tunnel.setWebSocket(key, socket);
+                    if(tunnel.passProxy(req.headers.host, reply, req, null, socket, head) === true){
+                        tunnel.setWebSocket(key, socket);
+                    }else{
+                        socket.write('HTTP/1.1 500 Internal server wrror\r\n' +
+                            'Upgrade: WebSocket\r\n' +
+                            'Connection: Close\r\n' +
+                            'Access Denied: Internal server error\r\n' +
+                            '\r\n');
+                        socket.end();
+                        console.log('passProxy error');
+                    }
                 }
             });
         } else {
