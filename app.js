@@ -27,7 +27,6 @@ const client = new (require('./lib/redisClient.js'))(config);
 const view = new (require('./lib/view.js'))(config);
 const tunnel = new (require('./lib/tunnels.js'))(config);
 
-
 // 算法
 // id + req.headers.host + secret
 
