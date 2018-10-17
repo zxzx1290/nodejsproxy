@@ -13,7 +13,7 @@
     "http-proxy": "^1.17.0",
     "querystring": "^0.2.0",
     "redis": "^2.8.0",
-    "request": "^2.83.0",
+    "request": "^2.88.0",
     "speakeasy": "^2.0.0"
   },
   "devDependencies": {
