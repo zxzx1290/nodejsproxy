@@ -21,6 +21,6 @@ if (cluster.isMaster) {
     });
 } else {
 
-    require("./src/app.js");
+    require("./app.js");
 
 }
