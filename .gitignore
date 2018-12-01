@@ -58,3 +58,5 @@ typings/
 .env
 
 config-prod.js
+
+.coveralls.yml

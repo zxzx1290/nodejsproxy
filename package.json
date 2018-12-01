@@ -5,8 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "NODE_ENV=prod node app.js",
-    "test": "NODE_ENV=test node_modules/.bin/mocha",
-    "coveralls": "NODE_ENV=test node_modules/.bin/istanbul cover node_modules/.bin/_mocha && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage"
+    "test": "NODE_ENV=test node_modules/.bin/istanbul cover node_modules/.bin/_mocha && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage"
   },
   "author": "",
   "dependencies": {
