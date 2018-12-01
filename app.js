@@ -159,12 +159,15 @@ const proxyServer = http.createServer(function(req, res) {
                                     return;
                                 }
                                 let rediskey = util.sha512(id + req.headers.host + config.secret);
-
-                                // line bot
-                                request({
-                                    method: 'GET',
-                                    url: config.loginNotify + encodeURIComponent(post.username + ' 於 ' + req.headers['x-real-ip'] + ' 登入 ' + req.headers.host + '\r\nsession ' + rediskey.substring(0,5))
-                                }, function(error, response, body) {});
+                                
+                                if(config.loginNotify !== '') {
+                                    // line bot
+                                    request({
+                                        method: 'GET',
+                                        url: config.loginNotify + encodeURIComponent(post.username + ' 於 ' + req.headers['x-real-ip'] + ' 登入 ' + req.headers.host + '\r\nsession ' + rediskey.substring(0,5))
+                                    }, function(error, response, body) {});
+                                }
+                                
 
                                 // del ban record
                                 client.del(util.md5(ip), function(err, reply) {

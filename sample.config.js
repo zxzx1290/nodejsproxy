@@ -15,6 +15,7 @@ module.exports = {
             "exlogin": "/login", // the login post url
             "login": "/login", // use for internal login path, useful when using url rewrite
             "logout": "/logout", // use for internal logout path, useful when using url rewrite
+            "check": "/check", //check if session almost expire, return data {'status':'boolean','data':'text message'}
             "account": {
                 "c9": { // username
                     "totpsecret": "K5BFI6ZBHFEHGRLLNBAGKYKEJ5CTIYRUPFJGK6SFJURXATSPNVKA", //totp secret
