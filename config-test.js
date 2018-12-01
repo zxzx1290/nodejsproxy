@@ -16,6 +16,7 @@ module.exports = {
             "exlogin": "/login",
             "login": "/login",
             "logout": "/logout",
+            "check": "/check",
             "account": {
                 "aaa": {
                     "totpsecret": null,
@@ -30,7 +31,7 @@ module.exports = {
     },
     backendTunnel: {
         "b1": {
-            "host": "localhost",
+            "host": "localhost", // send to target
             "forward": "localhost",
             "port": 8888
         },

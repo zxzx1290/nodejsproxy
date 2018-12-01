@@ -87,21 +87,43 @@ const proxyServer = http.createServer(function(req, res) {
                             // session not found
                             client.incr(util.md5(ip), function(err, reply) {
                                 client.get(util.md5(ip), function(err, reply) {
-                                    res.writeHead(200, {
-                                        'Content-Type': 'text/html'
-                                    });
+
                                     let timeObj = new Date(new Date().getTime() - 432000000).toUTCString(); // 5 days ago(ms)
+
+                                    if (path.pathname === (util.getPrefixURL(config, req.headers.host, 'check'))) {
+                                        res.writeHead(200, {
+                                            'Content-Type': 'application/json'
+                                        });
+                                        res.write(JSON.stringify({'status':'false','data':'session expire'}));
+                                        res.end();
+                                        return;
+                                    }
+
                                     res.writeHead(200, {
                                         'Content-Type': 'text/html',
                                         'Set-Cookie': 'proxysession=;path=/;Expires=' + timeObj + ';httpOnly;Secure'
                                     });
-
                                     res.write(view.genView(req.headers.host, ip, path.pathname, reply, util.getPrefixURL(config, req.headers.host, 'exlogin')));
                                     res.end();
                                 });
                             });
                         } else {
                             // auth ok
+                            if (path.pathname === (util.getPrefixURL(config, req.headers.host, 'check'))) {
+                                client.ttl(util.sha512(cookies['proxysession'] + req.headers.host + config.secret), function (err, ttl) {
+                                    res.writeHead(200, {
+                                        'Content-Type': 'application/json'
+                                    });
+                                    if(err) {
+                                        res.write(JSON.stringify({'status':'true','data':'error'}));
+                                    }else{
+                                        res.write(JSON.stringify({'status':'true','data':ttl}));
+                                    }
+                                    res.end();
+                                });
+                                return;
+                            }
+
                             tunnel.passProxy(req.headers.host, reply, req, res);
                         }
                     });
@@ -192,6 +214,16 @@ const proxyServer = http.createServer(function(req, res) {
                         }
                     });
                 } else {
+
+                    if (path.pathname === (util.getPrefixURL(config, req.headers.host, 'check'))) {
+                        res.writeHead(200, {
+                            'Content-Type': 'application/json'
+                        });
+                        res.write(JSON.stringify({'status':'false','data':'no session'}));
+                        res.end();
+                        return;
+                    }
+
                     res.writeHead(200, {
                         'Content-Type': 'text/html'
                     });
