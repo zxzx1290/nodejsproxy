@@ -17,6 +17,7 @@ module.exports = {
             "login": "/login",
             "logout": "/logout",
             "check": "/check",
+            "extend": "/extend",
             "account": {
                 "aaa": {
                     "totpsecret": null,

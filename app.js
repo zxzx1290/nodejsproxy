@@ -18,7 +18,7 @@ switch(process.env.NODE_ENV){
         break;
     default:
         console.error('unknown config type');
-        return;
+        process.exit()
 }
 
 
@@ -92,7 +92,8 @@ const proxyServer = http.createServer(function(req, res) {
 
                                     if (path.pathname === (util.getPrefixURL(config, req.headers.host, 'check'))) {
                                         res.writeHead(200, {
-                                            'Content-Type': 'application/json'
+                                            'Content-Type': 'application/json',
+                                            'Set-Cookie': 'proxysession=;path=/;Expires=' + timeObj + ';httpOnly;Secure'
                                         });
                                         res.write(JSON.stringify({'status':'false','data':'session expire'}));
                                         res.end();
@@ -107,8 +108,17 @@ const proxyServer = http.createServer(function(req, res) {
                                     res.end();
                                 });
                             });
+
+                            if(config.loginNotify !== '') {
+                                // line bot
+                                request({
+                                    method: 'GET',
+                                    url: config.loginNotify + encodeURIComponent(req.headers['x-real-ip'] + ' 連接 ' + req.headers.host + ' session過期')
+                                }, function(error, response, body) {});
+                            }
                         } else {
                             // auth ok
+                            // session check url
                             if (path.pathname === (util.getPrefixURL(config, req.headers.host, 'check'))) {
                                 client.ttl(util.sha512(cookies['proxysession'] + req.headers.host + config.secret), function (err, ttl) {
                                     res.writeHead(200, {
@@ -124,7 +134,35 @@ const proxyServer = http.createServer(function(req, res) {
                                 return;
                             }
 
-                            tunnel.passProxy(req.headers.host, reply, req, res);
+                            // extend session check url
+                            if (path.pathname === (util.getPrefixURL(config, req.headers.host, 'extend'))) {
+                                
+                                if(config.loginNotify !== '') {
+                                    // line bot
+                                    request({
+                                        method: 'GET',
+                                        url: config.loginNotify + encodeURIComponent(Buffer.from(reply, 'base64') + ' 於 ' + req.headers['x-real-ip'] + ' 延長登入 ' + req.headers.host + '\r\nsession ' + util.sha512(cookies['proxysession'] + req.headers.host + config.secret).substring(0,5))
+                                    }, function(error, response, body) {});
+                                }
+
+                                util.loginSuccess(client, cookies['proxysession'], Buffer.from(reply, 'base64'), false, config, req, res, function(data) {
+                                        if(data){
+                                            console.log('process relogin success');
+                                        }else{
+                                            console.log('process relogin failed');
+                                        }
+                                    });
+
+                                return;
+                            }
+
+                            if(!tunnel.passProxy(req.headers.host, reply, req, res)){
+                                res.writeHead(500, {
+                                    'Content-Type': 'text/html'
+                                });
+                                res.write('error occur');
+                                res.end();
+                            };
                         }
                     });
                 }
@@ -159,7 +197,7 @@ const proxyServer = http.createServer(function(req, res) {
                                     return;
                                 }
                                 let rediskey = util.sha512(id + req.headers.host + config.secret);
-                                
+
                                 if(config.loginNotify !== '') {
                                     // line bot
                                     request({
@@ -167,33 +205,16 @@ const proxyServer = http.createServer(function(req, res) {
                                         url: config.loginNotify + encodeURIComponent(post.username + ' 於 ' + req.headers['x-real-ip'] + ' 登入 ' + req.headers.host + '\r\nsession ' + rediskey.substring(0,5))
                                     }, function(error, response, body) {});
                                 }
-                                
+
 
                                 // del ban record
                                 client.del(util.md5(ip), function(err, reply) {
-                                    // set session
-                                    // redis儲存用
-                                    let loginAliveSec = config.defaultLoginAliveSec;
-                                    // cookie用
-                                    let cookieAliveSec = '0';
-                                    // check remember me
-                                    if(post.rememberme === 'true'){
-                                        loginAliveSec = config.longLoginAliveSec;
-                                        cookieAliveSec = new Date(new Date().getTime() + (config.longLoginAliveSec * 1000)).toUTCString();
-                                    }
-
-                                    // redis use seconds
-                                    client.set(rediskey, Buffer.from(post.username).toString('base64'), 'EX', loginAliveSec, function(err, reply) {
-                                        // console.log('user '+post.username+' login success');
-                                        res.setHeader('Content-Type', 'text/html');
-                                        res.setHeader('Set-Cookie',
-                                        [
-                                            'proxysession=' + id + ';path=/;Expires=' + cookieAliveSec + ';httpOnly;Secure',
-                                            'proxyuser=' + post.username + ';path=/;Expires=' + cookieAliveSec + ';httpOnly;Secure',
-                                            'proxyhash=' + util.md5(post.username + config.usersalt) + ';path=/;Expires=' + cookieAliveSec + ';httpOnly;Secure',
-                                        ]);
-                                        res.write(JSON.stringify({'code':'1','data':util.getPrefixURL(config, req.headers.host, 'exroot')}));
-                                        res.end();
+                                    util.loginSuccess(client, id, post.username, (post.rememberme === 'true'), config, req, res, function(data) {
+                                        if(data){
+                                            console.log('process login success');
+                                        }else{
+                                            console.log('process login failed');
+                                        }
                                     });
                                 });
                             } else {
@@ -207,6 +228,14 @@ const proxyServer = http.createServer(function(req, res) {
                                         res.end();
                                     });
                                 });
+
+                                if(config.loginNotify !== '') {
+                                    // line bot
+                                    request({
+                                        method: 'GET',
+                                        url: config.loginNotify + encodeURIComponent(post.username + ' 於 ' + req.headers['x-real-ip'] + ' 登入 ' + req.headers.host + ' 失敗')
+                                    }, function(error, response, body) {});
+                                }
                             }
                         } else {
                             res.writeHead(200, {

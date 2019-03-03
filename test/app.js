@@ -12,6 +12,7 @@ switch (process.env.NODE_ENV) {
         break;
     default:
         console.error('unknown config type');
+        process.exit()
 }
 
 const tunnel = new(require('../lib/tunnels.js'))(config);
