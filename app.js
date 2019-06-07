@@ -145,7 +145,7 @@ const proxyServer = http.createServer(function(req, res) {
                                     }, function(error, response, body) {});
                                 }
 
-                                util.loginSuccess(client, cookies['proxysession'], Buffer.from(reply, 'base64'), false, config, req, res, function(data) {
+                                util.loginSuccess(client, cookies['proxysession'], Buffer.from(reply, 'base64'), true, config, req, res, function(data) {
                                         if(data){
                                             console.log('process relogin success');
                                         }else{
