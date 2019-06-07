@@ -23,6 +23,7 @@ switch(process.env.NODE_ENV){
 
 
 const util = require('./lib/util.js');
+util.config(config);
 const client = new (require('./lib/redisClient.js'))(config);
 const view = new (require('./lib/view.js'))(config);
 const tunnel = new (require('./lib/tunnels.js'))(config);
@@ -108,14 +109,8 @@ const proxyServer = http.createServer(function(req, res) {
                                     res.end();
                                 });
                             });
-
-                            if(config.loginNotify !== '') {
-                                // line bot
-                                request({
-                                    method: 'GET',
-                                    url: config.loginNotify + encodeURIComponent(req.headers['x-real-ip'] + ' 連接 ' + req.headers.host + ' session過期')
-                                }, function(error, response, body) {});
-                            }
+                            
+                            util.sendLineBot(req.headers['x-real-ip'] + ' 連接 ' + req.headers.host + ' session過期');
                         } else {
                             // auth ok
                             // session check url
@@ -136,7 +131,7 @@ const proxyServer = http.createServer(function(req, res) {
 
                             // extend session check url
                             if (path.pathname === (util.getPrefixURL(config, req.headers.host, 'extend'))) {
-                                
+
                                 if(config.loginNotify !== '') {
                                     // line bot
                                     request({
@@ -198,14 +193,7 @@ const proxyServer = http.createServer(function(req, res) {
                                 }
                                 let rediskey = util.sha512(id + req.headers.host + config.secret);
 
-                                if(config.loginNotify !== '') {
-                                    // line bot
-                                    request({
-                                        method: 'GET',
-                                        url: config.loginNotify + encodeURIComponent(post.username + ' 於 ' + req.headers['x-real-ip'] + ' 登入 ' + req.headers.host + '\r\nsession ' + rediskey.substring(0,5))
-                                    }, function(error, response, body) {});
-                                }
-
+                                util.sendLineBot(post.username + ' 於 ' + req.headers['x-real-ip'] + ' 登入 ' + req.headers.host + '\r\nsession ' + rediskey.substring(0,5));
 
                                 // del ban record
                                 client.del(util.md5(ip), function(err, reply) {
@@ -229,13 +217,7 @@ const proxyServer = http.createServer(function(req, res) {
                                     });
                                 });
 
-                                if(config.loginNotify !== '') {
-                                    // line bot
-                                    request({
-                                        method: 'GET',
-                                        url: config.loginNotify + encodeURIComponent(post.username + ' 於 ' + req.headers['x-real-ip'] + ' 登入 ' + req.headers.host + ' 失敗')
-                                    }, function(error, response, body) {});
-                                }
+                                util.sendLineBot(post.username + ' 於 ' + req.headers['x-real-ip'] + ' 登入 ' + req.headers.host + ' 失敗');
                             }
                         } else {
                             res.writeHead(200, {
