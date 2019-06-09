@@ -49,6 +49,10 @@ describe('#util.js', function() {
     it('getPrefixURL should return correctly', function() {
         expect(util.getPrefixURL(config, 'example.com', 'login')).to.eql('/login');
     });
+
+    it('sendLineBot should return true', function() {
+        expect(util.sendLineBot('')).to.be.ok();
+    });
 });
 
 const view = new (require('../lib/view.js'))(config);

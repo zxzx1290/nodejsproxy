@@ -3,7 +3,7 @@
 
 module.exports = {
     template: "template.html",
-    loginNotify: null,
+    loginNotify: '',
     secret: "test-secret",
     usersalt: "test-salt",
     maxretry: 3,
