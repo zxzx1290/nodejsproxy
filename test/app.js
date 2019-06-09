@@ -36,6 +36,7 @@ describe('#tunnels.js', function() {
 });
 
 const util = require('../lib/util.js');
+util.config(config);
 
 describe('#util.js', function() {
     it('md5 should return correctly', function() {
@@ -47,7 +48,7 @@ describe('#util.js', function() {
     });
 
     it('getPrefixURL should return correctly', function() {
-        expect(util.getPrefixURL(config, 'example.com', 'login')).to.eql('/login');
+        expect(util.getPrefixURL('example.com', 'login')).to.eql('/login');
     });
 
     it('sendLineBot should return true', function() {
@@ -59,6 +60,6 @@ const view = new (require('../lib/view.js'))(config);
 
 describe('#view.js', function() {
     it('view should return string', function() {
-        expect(view.genView('example.com', '1.1.1.1', '/', 0, util.getPrefixURL(config, 'example.com', 'exlogin'))).to.be.an('string');
+        expect(view.genView('example.com', '1.1.1.1', '/', 0, util.getPrefixURL('example.com', 'exlogin'))).to.be.an('string');
     });
 });

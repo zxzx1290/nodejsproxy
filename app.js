@@ -63,14 +63,14 @@ const proxyServer = http.createServer(function(req, res) {
             }
             // not ban
             if (typeof cookies['proxysession'] !== 'undefined') {
-                if (path.pathname === (util.getPrefixURL(config, req.headers.host, 'logout'))) {
+                if (path.pathname === (util.getPrefixURL(req.headers.host, 'logout'))) {
                     // logout
                     let timeObj = new Date(new Date().getTime() - 432000000).toUTCString(); // 5 days ago(ms)
                     res.writeHead(200, {
                         'Content-Type': 'text/html',
                         'Set-Cookie': 'proxysession=;path=/;Expires=' + timeObj + ';httpOnly;Secure'
                     });
-                    res.write('<script>window.location.href="' + util.getPrefixURL(config, req.headers.host, "exroot") + '";</script>');
+                    res.write('<script>window.location.href="' + util.getPrefixURL(req.headers.host, "exroot") + '";</script>');
                     if (typeof cookies['proxysession'] !== 'undefined') {
                         let key = util.sha512(cookies['proxysession'] + req.headers.host + config.secret);
                         // remove websocket
@@ -91,7 +91,7 @@ const proxyServer = http.createServer(function(req, res) {
 
                                     let timeObj = new Date(new Date().getTime() - 432000000).toUTCString(); // 5 days ago(ms)
 
-                                    if (path.pathname === (util.getPrefixURL(config, req.headers.host, 'check'))) {
+                                    if (path.pathname === (util.getPrefixURL(req.headers.host, 'check'))) {
                                         res.writeHead(200, {
                                             'Content-Type': 'application/json',
                                             'Set-Cookie': 'proxysession=;path=/;Expires=' + timeObj + ';httpOnly;Secure'
@@ -105,16 +105,16 @@ const proxyServer = http.createServer(function(req, res) {
                                         'Content-Type': 'text/html',
                                         'Set-Cookie': 'proxysession=;path=/;Expires=' + timeObj + ';httpOnly;Secure'
                                     });
-                                    res.write(view.genView(req.headers.host, ip, path.pathname, reply, util.getPrefixURL(config, req.headers.host, 'exlogin')));
+                                    res.write(view.genView(req.headers.host, ip, path.pathname, reply, util.getPrefixURL(req.headers.host, 'exlogin')));
                                     res.end();
                                 });
                             });
-                            
+
                             util.sendLineBot(req.headers['x-real-ip'] + ' 連接 ' + req.headers.host + ' session過期');
                         } else {
                             // auth ok
                             // session check url
-                            if (path.pathname === (util.getPrefixURL(config, req.headers.host, 'check'))) {
+                            if (path.pathname === (util.getPrefixURL(req.headers.host, 'check'))) {
                                 client.ttl(util.sha512(cookies['proxysession'] + req.headers.host + config.secret), function (err, ttl) {
                                     res.writeHead(200, {
                                         'Content-Type': 'application/json'
@@ -130,7 +130,7 @@ const proxyServer = http.createServer(function(req, res) {
                             }
 
                             // extend session check url
-                            if (path.pathname === (util.getPrefixURL(config, req.headers.host, 'extend'))) {
+                            if (path.pathname === (util.getPrefixURL(req.headers.host, 'extend'))) {
 
                                 if(config.loginNotify !== '') {
                                     // line bot
@@ -140,7 +140,7 @@ const proxyServer = http.createServer(function(req, res) {
                                     }, function(error, response, body) {});
                                 }
 
-                                util.loginSuccess(client, cookies['proxysession'], Buffer.from(reply, 'base64'), true, config, req, res, function(data) {
+                                util.loginSuccess(client, cookies['proxysession'], Buffer.from(reply, 'base64'), true, req, res, function(data) {
                                         if(data){
                                             console.log('process relogin success');
                                         }else{
@@ -163,7 +163,7 @@ const proxyServer = http.createServer(function(req, res) {
                 }
             } else {
                 // no session
-                if (req.method === 'POST' && path.pathname === (util.getPrefixURL(config, req.headers.host, 'login'))) {
+                if (req.method === 'POST' && path.pathname === (util.getPrefixURL(req.headers.host, 'login'))) {
                     //login
                     let body = '';
                     req.on('data', function(data) {
@@ -177,7 +177,7 @@ const proxyServer = http.createServer(function(req, res) {
                     req.on('end', function() {
                         let post = qs.parse(body);
                         if (typeof post.username !== 'undefined' && typeof post.password !== 'undefined') {
-                            let isok = util.checkUser(config, req.headers.host, post.username, post.password);
+                            let isok = util.checkUser(req.headers.host, post.username, post.password);
                             if (isok) {
                                 //login success
                                 //generate id
@@ -197,7 +197,7 @@ const proxyServer = http.createServer(function(req, res) {
 
                                 // del ban record
                                 client.del(util.md5(ip), function(err, reply) {
-                                    util.loginSuccess(client, id, post.username, (post.rememberme === 'true'), config, req, res, function(data) {
+                                    util.loginSuccess(client, id, post.username, (post.rememberme === 'true'), req, res, function(data) {
                                         if(data){
                                             console.log('process login success');
                                         }else{
@@ -229,7 +229,7 @@ const proxyServer = http.createServer(function(req, res) {
                     });
                 } else {
 
-                    if (path.pathname === (util.getPrefixURL(config, req.headers.host, 'check'))) {
+                    if (path.pathname === (util.getPrefixURL(req.headers.host, 'check'))) {
                         res.writeHead(200, {
                             'Content-Type': 'application/json'
                         });
@@ -244,7 +244,7 @@ const proxyServer = http.createServer(function(req, res) {
                     if(reply===null){
                         reply=0;
                     }
-                    res.write(view.genView(req.headers.host, ip, path.pathname, reply, util.getPrefixURL(config, req.headers.host, 'exlogin')));
+                    res.write(view.genView(req.headers.host, ip, path.pathname, reply, util.getPrefixURL(req.headers.host, 'exlogin')));
                     res.end();
                 }
             }
