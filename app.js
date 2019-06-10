@@ -131,14 +131,8 @@ const proxyServer = http.createServer(function(req, res) {
 
                             // extend session check url
                             if (path.pathname === (util.getPrefixURL(req.headers.host, 'extend'))) {
-
-                                if(config.loginNotify !== '') {
-                                    // line bot
-                                    request({
-                                        method: 'GET',
-                                        url: config.loginNotify + encodeURIComponent(Buffer.from(reply, 'base64') + ' 於 ' + req.headers['x-real-ip'] + ' 延長登入 ' + req.headers.host + '\r\nsession ' + util.sha512(cookies['proxysession'] + req.headers.host + config.secret).substring(0,5))
-                                    }, function(error, response, body) {});
-                                }
+                                
+                                util.sendLineBot(Buffer.from(reply, 'base64') + ' 於 ' + req.headers['x-real-ip'] + ' 延長登入 ' + req.headers.host + '\r\nsession ' + util.sha512(cookies['proxysession'] + req.headers.host + config.secret).substring(0,5));
 
                                 util.loginSuccess(client, cookies['proxysession'], Buffer.from(reply, 'base64'), true, req, res, function(data) {
                                         if(data){
