@@ -281,6 +281,9 @@ input.fashion[type="checkbox"] + label.fashion:hover:before {
                 case '3':
                     document.querySelector(".logo div").innerHTML = data['data'];
                     document.querySelector(".logo div").style.display = 'block';
+                    if(parseInt(data['data'],10) > 3){
+                        window.location.reload();
+                    }
                     break;
                 default:
                     alert('系統錯誤，請重試');
