@@ -54,6 +54,10 @@ describe('#util.js', function() {
     it('sendLineBot should return true', function() {
         expect(util.sendLineBot('')).to.be.ok();
     });
+
+    it('randomString should return string', function() {
+        expect(util.randomString()).to.be.an('string');
+    });
 });
 
 const view = new (require('../lib/view.js'))(config);
