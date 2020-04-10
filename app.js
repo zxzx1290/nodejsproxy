@@ -2,11 +2,9 @@
 
 const http = require('http');
 
-const httpProxy = require('http-proxy');
 const url = require('url');
 const cookie = require('cookie');
 const qs = require('querystring');
-const request = require('request');
 
 let config;
 switch(process.env.NODE_ENV){
@@ -253,7 +251,7 @@ proxyServer.on('upgrade', function(req, socket, head) {
     client.get(util.md5(ip), function(err, reply) {
         if (reply !== null && parseInt(reply, 10) >= config.maxretry) {
             socket.write('HTTP/1.1 403 Forbidden\r\n' +
-                'Access Denied: You are banned\r\n' +
+                'Access-Denied: You are banned\r\n' +
                 '\r\n');
             socket.end();
             console.log('You are banned');
@@ -265,7 +263,7 @@ proxyServer.on('upgrade', function(req, socket, head) {
                     socket.write('HTTP/1.1 403 Forbidden\r\n' +
                         'Upgrade: WebSocket\r\n' +
                         'Connection: Close\r\n' +
-                        'Access Denied: You are banned\r\n' +
+                        'Access-Denied: You are banned\r\n' +
                         '\r\n');
                     socket.end();
                     console.log('You are banned');
@@ -278,7 +276,7 @@ proxyServer.on('upgrade', function(req, socket, head) {
                         socket.write('HTTP/1.1 500 Internal server wrror\r\n' +
                             'Upgrade: WebSocket\r\n' +
                             'Connection: Close\r\n' +
-                            'Access Denied: Internal server error\r\n' +
+                            'Access-Denied: Internal server error\r\n' +
                             '\r\n');
                         socket.end();
                         console.log('passProxy error');
@@ -287,7 +285,7 @@ proxyServer.on('upgrade', function(req, socket, head) {
             });
         } else {
             socket.write('HTTP/1.1 403 Forbidden\r\n' +
-                'Access Denied: You are not allow\r\n' +
+                'Access-Denied: You are not allow\r\n' +
                 '\r\n');
             socket.end();
             console.log('You are not allow');
@@ -296,4 +294,4 @@ proxyServer.on('upgrade', function(req, socket, head) {
 });
 
 
-proxyServer.listen(8600, '127.0.0.1');
+proxyServer.listen(config.port, '127.0.0.1');

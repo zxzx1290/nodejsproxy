@@ -1,8 +1,8 @@
 "use strict";
 
 const cluster = require("cluster");
-//const num = require("os").cpus().length;
-const num = 2;
+const num = require("os").cpus().length;
+// const num = 2;
 
 if (cluster.isMaster) {
     console.log("master start...");
